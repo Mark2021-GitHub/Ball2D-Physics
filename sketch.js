@@ -18,10 +18,6 @@ function setup() {
 
   numBalls = 0;
 
-  soundFormats("mp3");
-  bounce = loadSound("bounce.mp3");
-  fire = loadSound("fire.mp3");
-  // bounce.playMode('restart');
 
   cb1 = createCheckbox("Ball fill", false);
   cb1.position(10, height + 10);
@@ -83,18 +79,6 @@ function setBall() {
   numBalls++;
 }
 
-/*
-    if(isStart) {
-      ball.setStart(mouseX, mouseY, 1, 0);
-    } else {
-      line(ball.x, ball.y, mouseX, mouseY);
-    }
-      dv = createVector (mouseX-ball.x, mouseY-ball.y);
-      let dvm = dv.mag();
-      dv.normalize();
-      dv.mult(dvm/30);
-      ball.setSpeed(dv.x, dv.y);
-  */
 
 // Ball class
 class Ball {
@@ -250,8 +234,6 @@ class Ball {
         let vx = targetX - this.others[i].x;
         let vy = targetY - this.others[i].y;
    
-        //console.log("targetX:"+targetX+" targetX2:" +targetX2);     
-        
         let ax = vx * 0.05;
         let ay = vy * 0.05;
         let pxs1 = this.xspeed;
@@ -333,8 +315,7 @@ function keyPressed() {
     }
     
   }
-  if (key == "o") {
-  }
+
   if (key == "r") {
     redraw();
   }
