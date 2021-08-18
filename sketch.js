@@ -38,9 +38,10 @@ function setup() {
   dv1.position(sl1.x +150, sl1.y);
   sl1.changed(PrintDV1);
   
+  /*
   cb6 = createCheckbox("Console Logging", false);
   cb6.position(sl1.x, sl1.y +20 );
-  
+  */
 }
 
 function PrintDV1() {
@@ -171,7 +172,7 @@ class Ball {
       if (this.yspeed > this.mbs) {
         // minimum bounce speed
         this.yspeed *= -this.rs;
-        if(cb6.checked()) console.log("id:"+this.id+" ys:"+this.yspeed);
+        // if(cb6.checked()) console.log("id:"+this.id+" ys:"+this.yspeed);
       } else {
         // if yspeed set to 0, set friction to 0.01;
         this.yspeed = 0;
