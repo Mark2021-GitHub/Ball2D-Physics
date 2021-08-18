@@ -217,7 +217,7 @@ class Ball {
         let dx = this.others[i].x - this.x;
         let dy = this.others[i].y - this.y;
        
-        /*
+        
         let angle = atan2(dy, dx);
         let minX = cos(angle) * minDist;
         let minY = sin(angle) * minDist;
@@ -225,8 +225,8 @@ class Ball {
         let targetY = this.y + minY;  
         let vx = targetX - this.others[i].x;
         let vy = targetY - this.others[i].y;
-        */
         
+        /*
         let dv = createVector(dx, dy);
         dv.normalize();
         dv.mult(minDist);
@@ -234,7 +234,9 @@ class Ball {
         let targetY = this.y + dv.y;
         let vx = targetX - this.others[i].x;
         let vy = targetY - this.others[i].y;
-   
+        */
+       
+        
         let ax = vx * 0.05;
         let ay = vy * 0.05;
         let pxs1 = this.xspeed;
