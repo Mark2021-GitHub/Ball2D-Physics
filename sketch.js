@@ -38,10 +38,16 @@ function setup() {
   dv1.position(sl1.x +150, sl1.y);
   sl1.changed(PrintDV1);
   
-  /*
+  sl2 = createSlider(0, 20, 10, 1);
+  sl2.position(cb2.x +200, cb2.y );
+  dv2 = createDiv("Ball's X Speed:0");
+  dv2.style("font-size", "16px");
+  dv2.position(sl2.x + 140, sl2.y);
+  sl2.changed(PrintDV2);
+  
   cb6 = createCheckbox("Console Logging", false);
   cb6.position(sl1.x, sl1.y +20 );
-  */
+  
 }
 
 function PrintDV1() {
@@ -49,6 +55,12 @@ function PrintDV1() {
   let s2 = s1 +50;
   dv1.html("Ball Diemeter: "+s1+"-"+s2, false);
 }
+
+function PrintDV2() {
+  let s1 = sl2.value()-10;
+  dv2.html("Ball's X speed:" + s1, false);
+}
+
 function draw() {
   background(0, 0, 0);
 
@@ -69,7 +81,7 @@ function setBall() {
     mouseX,
     mouseY,
     random(bsize, bsize + 50),
-    0,
+    sl2.value()-10,
     0,
     gravity,
     0
@@ -80,19 +92,23 @@ function setBall() {
   numBalls++;
 }
 
-
 // Ball class
 class Ball {
   constructor(others, id, x, y, d, vx, vy, accel, fr) {
     this.others = others;
     this.id = id;
+    
     this.x = x;
     this.y = y;
+    this.cv = createVector(x,y);
+    
     this.d = d;
     this.r = this.d / 2;
 
     this.xspeed = vx;
     this.yspeed = vy;
+    this.sv = createVector(vx, vy);
+    
     this.accel = accel; // gravity
     this.fr = fr; // initial floor friction
 
@@ -144,35 +160,40 @@ class Ball {
 
   freeFall() {
     this.yspeed += this.accel;
+    this.sv.y += this.accel;
 
     if (this.fr > 0) {
       if (this.xspeed > 0.01) {
         this.xspeed -= this.fr;
+        this.sv.x -= this.fr;
       } else if (this.xspeed < -0.01) {
         this.xspeed += this.fr;
+        this.sv.x += this.fr;
       } else {
         this.xspeed = 0;
+        this.sv.x = 0;
       }
     }
 
     this.x += this.xspeed;
     this.y += this.yspeed;
+    this.cv.add(this.sv);
+    
 
     if (this.x > this.right) {
       this.x = this.right;
       this.xspeed *= -this.rs;
-      //bounce.play();
+      
     } else if (this.x < this.left) {
       this.x = this.left;
       this.xspeed *= -this.rs;
-      // bounce.play();
+      
     }
     if (this.y > this.bottom) {
       this.y = this.bottom;
       if (this.yspeed > this.mbs) {
         // minimum bounce speed
         this.yspeed *= -this.rs;
-        // if(cb6.checked()) console.log("id:"+this.id+" ys:"+this.yspeed);
       } else {
         // if yspeed set to 0, set friction to 0.01;
         this.yspeed = 0;
@@ -214,9 +235,21 @@ class Ball {
       let distance = dist(this.x, this.y, this.others[i].x, this.others[i].y);
 
       if (distance < minDist) {
+       
+        
         let dx = this.others[i].x - this.x;
         let dy = this.others[i].y - this.y;
        
+        /*
+        let angle = atan2(dy, dx);
+        let minX = cos(angle) * minDist;
+        let minY = sin(angle) * minDist;
+        let targetX = this.x + minX;
+        let targetY = this.y + minY;  
+        let vx = targetX - this.others[i].x;
+        let vy = targetY - this.others[i].y;
+        */
+        
         let dv = createVector(dx, dy);
         dv.normalize();
         dv.mult(minDist);
@@ -224,7 +257,7 @@ class Ball {
         let targetY = this.y + dv.y;
         let vx = targetX - this.others[i].x;
         let vy = targetY - this.others[i].y;
-       
+    
         
         let ax = vx * 0.05;
         let ay = vy * 0.05;
@@ -307,9 +340,9 @@ function keyPressed() {
     }
     
   }
-
+  if (key == "o") {
+  }
   if (key == "r") {
     redraw();
   }
 }
-
