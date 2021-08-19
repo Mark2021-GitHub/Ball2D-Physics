@@ -9,7 +9,7 @@ let spring = 0.05;
 let gravity = 9.8 / 60;
 let friction = 0.01;
 let cb1;
-let mul=10;
+let mul = 10;
 
 function setup() {
   frameRate(60);
@@ -18,46 +18,44 @@ function setup() {
 
   numBalls = 0;
 
-
   cb1 = createCheckbox("Ball fill", false);
   cb1.position(10, height + 10);
   cb4 = createCheckbox("Ball stroke", true);
-  cb4.position(cb1.x+100, cb1.y);
-  
+  cb4.position(cb1.x + 100, cb1.y);
+
   cb2 = createCheckbox("Show Speed Vector", false);
   cb2.position(cb1.x, cb1.y + 20);
   cb3 = createCheckbox("Show Collision Vector", true);
   cb3.position(cb2.x, cb2.y + 20);
   cb5 = createCheckbox("Show Distance Line", false);
-  cb5.position(cb3.x+200, cb3.y );
+  cb5.position(cb3.x + 200, cb3.y);
 
   sl1 = createSlider(20, 100, 100, 10);
   sl1.position(cb3.x, cb3.y + 20);
   dv1 = createDiv("Ball Diemeter: 20-70");
   dv1.style("font-size", "16px");
-  dv1.position(sl1.x +150, sl1.y);
+  dv1.position(sl1.x + 150, sl1.y);
   sl1.changed(PrintDV1);
-  
+
   sl2 = createSlider(0, 20, 10, 1);
-  sl2.position(cb2.x +200, cb2.y );
+  sl2.position(cb2.x + 200, cb2.y);
   dv2 = createDiv("Ball's X Speed:0");
   dv2.style("font-size", "16px");
   dv2.position(sl2.x + 140, sl2.y);
   sl2.changed(PrintDV2);
-  
+
   cb6 = createCheckbox("Console Logging", false);
-  cb6.position(sl1.x, sl1.y +20 );
-  
+  cb6.position(sl1.x, sl1.y + 20);
 }
 
 function PrintDV1() {
   let s1 = sl1.value();
-  let s2 = s1 +50;
-  dv1.html("Ball Diemeter: "+s1+"-"+s2, false);
+  let s2 = s1 + 50;
+  dv1.html("Ball Diemeter: " + s1 + "-" + s2, false);
 }
 
 function PrintDV2() {
-  let s1 = sl2.value()-10;
+  let s1 = sl2.value() - 10;
   dv2.html("Ball's X speed:" + s1, false);
 }
 
@@ -81,7 +79,7 @@ function setBall() {
     mouseX,
     mouseY,
     random(bsize, bsize + 50),
-    sl2.value()-10,
+    sl2.value() - 10,
     0,
     gravity,
     0
@@ -97,18 +95,18 @@ class Ball {
   constructor(others, id, x, y, d, vx, vy, accel, fr) {
     this.others = others;
     this.id = id;
-    
+
     this.x = x;
     this.y = y;
-    this.cv = createVector(x,y);
-    
+    this.cv = createVector(x, y);
+
     this.d = d;
     this.r = this.d / 2;
 
     this.xspeed = vx;
     this.yspeed = vy;
     this.sv = createVector(vx, vy);
-    
+
     this.accel = accel; // gravity
     this.fr = fr; // initial floor friction
 
@@ -178,16 +176,13 @@ class Ball {
     this.x += this.xspeed;
     this.y += this.yspeed;
     this.cv.add(this.sv);
-    
 
     if (this.x > this.right) {
       this.x = this.right;
       this.xspeed *= -this.rs;
-      
     } else if (this.x < this.left) {
       this.x = this.left;
       this.xspeed *= -this.rs;
-      
     }
     if (this.y > this.bottom) {
       this.y = this.bottom;
@@ -235,11 +230,9 @@ class Ball {
       let distance = dist(this.x, this.y, this.others[i].x, this.others[i].y);
 
       if (distance < minDist) {
-       
-        
         let dx = this.others[i].x - this.x;
         let dy = this.others[i].y - this.y;
-       
+
         /*
         let angle = atan2(dy, dx);
         let minX = cos(angle) * minDist;
@@ -249,7 +242,7 @@ class Ball {
         let vx = targetX - this.others[i].x;
         let vy = targetY - this.others[i].y;
         */
-        
+
         let dv = createVector(dx, dy);
         dv.normalize();
         dv.mult(minDist);
@@ -257,55 +250,87 @@ class Ball {
         let targetY = this.y + dv.y;
         let vx = targetX - this.others[i].x;
         let vy = targetY - this.others[i].y;
-    
-        
+
         let ax = vx * 0.05;
         let ay = vy * 0.05;
         let pxs1 = this.xspeed;
         let pys1 = this.yspeed;
         let pxs2 = this.others[i].xspeed;
         let pys2 = this.others[i].yspeed;
-        
+
         this.xspeed -= ax;
         this.yspeed -= ay;
-        this.others[i].xspeed += ax;
+       
+        this.others[i].xspeed += ax;    
         this.others[i].yspeed += ay;
 
-        // distance line
-        if (cb5.checked() == true) {
-          stroke(random(255),random(255), random(255));
-          line(this.x, this.y, this.others[i].x, this.others[i].y);
+        
+        if (this.xspeed > 0.01) {
+          this.xspeed -= friction;
+        } else if (this.xspeed < -0.01) {
+          this.xspeed += friction;     
+        } else {
+          this.xspeed = (random(3)-1)*0.005;
+          print(this.xspeed);
+        }
+        if (this.others[i].xspeed > 0.01) {
+          this.others[i].xspeed -= friction;
+        } else if (this.others[i].xspeed < -0.01) {
+          this.others[i].xspeed += friction;     
+        } else {
+          this.others[i].xspeed = (random(3)-1)*0.005;
+          print(this.others[i].xspeed);
         }
         
+        if (this.yspeed > 0.01) {
+          this.yspeed -= 0.01;
+        } else if (this.yspeed < -0.01) {
+          this.yspeed += 0.01;     
+        } else {
+          this.yspeed = 0;
+        }
+        if (this.others[i].yspeed > 0.01) {
+          this.others[i].yspeed -= 0.01;
+        } else if (this.others[i].yspeed < -0.01) {
+          this.others[i].yspeed += 0.01;     
+        } else {
+          this.others[i].yspeed = 0;
+        }
+
+        // Show distance line
+        if (cb5.checked() == true) {
+          stroke(random(255), random(255), random(255));
+          line(this.x, this.y, this.others[i].x, this.others[i].y);
+        }
+
+        // Show Collision Vector: scale(mul)
         if (cb3.checked() == true) {
-          
           push();
           translate(this.x, this.y);
-          stroke(0,255,0);
+          stroke(0, 255, 0);
           strokeWeight(4);
-          line(0, 0, -ax*mul, -ay*mul);
-          stroke(255,0,0);
+          line(0, 0, -ax * mul, -ay * mul);
+          stroke(255, 0, 0);
           strokeWeight(3);
-          line(0,0, pxs1*mul, pys1*mul);
-          stroke(255,0,255);
+          line(0, 0, pxs1 * mul, pys1 * mul);
+          stroke(255, 0, 255);
           strokeWeight(2);
-          line(0,0, this.xspeed*mul, this.yspeed*mul);
-  
+          line(0, 0, this.xspeed * mul, this.yspeed * mul);
+
           pop();
           push();
           translate(this.others[i].x, this.others[i].y);
-          
-          stroke(0,0,255);
+
+          stroke(0, 0, 255);
           strokeWeight(3);
-          line(0, 0, ax*mul, ay*mul);
-          
-          stroke(255,0,0);
-          line(0,0, pxs2*mul, pys2*mul);
-          stroke(255,0,255);
+          line(0, 0, ax * mul, ay * mul);
+
+          stroke(255, 0, 0);
+          line(0, 0, pxs2 * mul, pys2 * mul);
+          stroke(255, 0, 255);
           strokeWeight(2);
-          line(0,0, this.others[i].xspeed*mul, this.others[i].yspeed*mul);
+          line(0, 0, this.others[i].xspeed * mul, this.others[i].yspeed * mul);
           pop();
-          
         }
       }
     }
@@ -326,19 +351,16 @@ class Ball {
   }
 }
 
-
 let bLoop = true;
 function keyPressed() {
   if (key == " ") {
-    if(bLoop == true) {
-      noLoop(); 
+    if (bLoop == true) {
+      noLoop();
       bLoop = false;
     } else {
-     loop();
+      loop();
       bLoop = true;
-      
     }
-    
   }
   if (key == "o") {
   }
