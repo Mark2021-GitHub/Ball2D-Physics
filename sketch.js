@@ -362,8 +362,6 @@ function keyPressed() {
       bLoop = true;
     }
   }
-  if (key == "o") {
-  }
   if (key == "r") {
     redraw();
   }
