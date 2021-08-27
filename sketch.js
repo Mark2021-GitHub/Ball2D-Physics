@@ -6,7 +6,7 @@ let cnv;
 let isFire, isStart;
 let dV;
 let spring = 0.05;
-let vaccel = 9.8;
+let vaccel = 0;
 let gravity = vaccel / 60;
 let friction = 0.01;
 let cb1;
@@ -24,10 +24,10 @@ function setup() {
   cb4 = createCheckbox("공 테두리 표시", true);
   cb4.position(cb1.x + 80, cb1.y);
 
-  cb2 = createCheckbox("속도 벡터 표시", false);
+  cb2 = createCheckbox("속도 벡터 표시", true);
   cb2.position(cb4.x + 130, cb4.y);
   
-  cb3 = createCheckbox("충돌 벡터 표시", true);
+  cb3 = createCheckbox("충돌 벡터 표시", false);
   cb3.position(cb1.x , cb1.y+20 );
   
   cb5 = createCheckbox("중심선간 거리 표시", false);
@@ -40,14 +40,14 @@ function setup() {
   dv1.position(sl1.x + 140, sl1.y);
   sl1.changed(PrintDV1);
 
-  sl2 = createSlider(0, 20, 10, 1);
+  sl2 = createSlider(0, 20, 20, 1);
   sl2.position(sl1.x , sl1.y+20);
   dv2 = createDiv("공 수평 출발 속도: 왼쪽(-10) ~ 오른쪽(+10)");
   dv2.style("font-size", "16px");
   dv2.position(sl2.x + 140, sl2.y);
   sl2.changed(PrintDV2);
 
-  sl4 = createSlider(0, 10, 9.8, 0.1);
+  sl4 = createSlider(0, 10, 0, 0.1);
   sl4.position(sl2.x , sl2.y+20);
   dv4 = createDiv("중력 가속도(낙하속도): 0~10m/s");
   dv4.style("font-size", "16px");
@@ -96,6 +96,9 @@ function PrintDV4() {
   vaccel = sl4.value();
   gravity = vaccel / 60;
   dv4.html("중력 가속도(낙하속도):" + vaccel, false);
+  for(let i = 0 ; i < numBalls; i ++){
+    balls[i].accel = gravity;
+  }
  
 }
 
