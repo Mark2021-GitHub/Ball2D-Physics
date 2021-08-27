@@ -6,7 +6,8 @@ let cnv;
 let isFire, isStart;
 let dV;
 let spring = 0.05;
-let gravity = 9.8 / 60;
+let vaccel = 9.8;
+let gravity = vaccel / 60;
 let friction = 0.01;
 let cb1;
 let mul = 10;
@@ -18,60 +19,77 @@ function setup() {
 
   numBalls = 0;
 
-  cb1 = createCheckbox("Ball fill", false);
+  cb1 = createCheckbox("공 색칠", false);
   cb1.position(10, height + 10);
-  cb4 = createCheckbox("Ball stroke", true);
-  cb4.position(cb1.x + 100, cb1.y);
+  cb4 = createCheckbox("공 테두리 표시", true);
+  cb4.position(cb1.x + 80, cb1.y);
 
-  cb2 = createCheckbox("Show Speed Vector", false);
-  cb2.position(cb1.x, cb1.y + 20);
-  cb3 = createCheckbox("Show Collision Vector", true);
-  cb3.position(cb2.x, cb2.y + 20);
-  cb5 = createCheckbox("Show Distance Line", false);
-  cb5.position(cb3.x + 200, cb3.y);
+  cb2 = createCheckbox("속도 벡터 표시", false);
+  cb2.position(cb4.x + 130, cb4.y);
+  
+  cb3 = createCheckbox("충돌 벡터 표시", true);
+  cb3.position(cb1.x , cb1.y+20 );
+  
+  cb5 = createCheckbox("중심선간 거리 표시", false);
+  cb5.position(cb3.x +150 , cb3.y);
 
-  sl1 = createSlider(20, 100, 100, 10);
+  sl1 = createSlider(20, 100, 60, 10);
   sl1.position(cb3.x, cb3.y + 20);
-  dv1 = createDiv("Ball Diemeter: 20-70");
+  dv1 = createDiv("공 크기(지름): 60-110");
   dv1.style("font-size", "16px");
-  dv1.position(sl1.x + 150, sl1.y);
+  dv1.position(sl1.x + 140, sl1.y);
   sl1.changed(PrintDV1);
 
   sl2 = createSlider(0, 20, 10, 1);
-  sl2.position(cb2.x + 200, cb2.y);
-  dv2 = createDiv("Ball's X Speed:0");
+  sl2.position(sl1.x , sl1.y+20);
+  dv2 = createDiv("공 수평 출발 속도: 왼쪽(-10) ~ 오른쪽(+10)");
   dv2.style("font-size", "16px");
   dv2.position(sl2.x + 140, sl2.y);
   sl2.changed(PrintDV2);
 
-  cb6 = createCheckbox("Collision Friction", true);
-  cb6.position(sl1.x, sl1.y + 20);
+  sl4 = createSlider(0, 10, 9.8, 0.1);
+  sl4.position(sl2.x , sl2.y+20);
+  dv4 = createDiv("중력 가속도(낙하속도): 0~10m/s");
+  dv4.style("font-size", "16px");
+  dv4.position(sl4.x + 140, sl4.y);
+  sl4.changed(PrintDV4);
   
   sl3 = createSlider(1, 20, 10, 1);
-  sl3.position(cb6.x + 200, cb6.y);
-  dv3 = createDiv("Friction:0.01");
+  sl3.position(sl4.x , sl4.y+20);
+  dv3 = createDiv("마찰력 크기:0.01");
   dv3.style("font-size", "16px");
   dv3.position(sl3.x + 140, sl3.y);
   sl3.changed(PrintDV3);
+  
+  cb6 = createCheckbox("마찰력 적용", true);
+  cb6.position(sl3.x + 270, sl3.y );
   
 }
 
 function PrintDV1() {
   let s1 = sl1.value();
   let s2 = s1 + 50;
-  dv1.html("Ball Diemeter: " + s1 + "-" + s2, false);
+  dv1.html("공 크기(지름): " + s1 + "-" + s2, false);
 }
 
 function PrintDV2() {
   let s1 = sl2.value() - 10;
-  dv2.html("Ball's X speed:" + s1, false);
+  dv2.html("공 수평 출발 속도:" + s1, false);
 }
 
 function PrintDV3() {
   friction = sl3.value()*0.001;
-  dv3.html("Friction:" + friction, false);
+  dv3.html("마찰력 크기:" + friction, false);
 
 }
+
+function PrintDV4() {
+  vaccel = sl4.value();
+  gravity = vaccel / 60;
+  dv4.html("중력 가속도(낙하속도):" + vaccel, false);
+ 
+}
+
 function draw() {
   background(0, 0, 0);
 
