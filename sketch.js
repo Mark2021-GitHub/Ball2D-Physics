@@ -64,6 +64,15 @@ function setup() {
   cb6 = createCheckbox("마찰력 적용", true);
   cb6.position(sl3.x + 270, sl3.y );
   
+  resetButton  = createButton('RESET');
+  resetButton.position(cb2.x+150, cb2.y);
+  resetButton.mousePressed(resetArray);
+
+}
+
+function resetArray() {
+  balls.splice(0,balls.length);
+  numBalls = 0;
 }
 
 function PrintDV1() {
