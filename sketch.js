@@ -75,8 +75,8 @@ function setup() {
 
 function draw() {
   background(0, 0, 0);
-  
-  divText.innerText = "# Number of Balls:" + numBalls + " 중력가속도 크기:" + vaccel ;
+  let milsec = round(deltaTime) + "ms";
+  divText.innerText = "[Number of Balls:" + numBalls + "] [Gravity Acceleration:" + vaccel + "]  [DeltaTime:" + milsec.padStart(5,0) +"]" ;
   for (let i = 0; i < numBalls; i++) {
     balls[i].collideVector();
     balls[i].freeFallVector();
