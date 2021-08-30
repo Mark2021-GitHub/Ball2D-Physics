@@ -1,4 +1,4 @@
-let ball; // Declare object
+let ball; // Declcheigobject
 let balls = [];
 let numBalls; // arrary count;
 let bounce, fire;
@@ -12,15 +12,18 @@ let friction = 0.01;
 let cb1;
 let mul = 10;
 
+let divText = document.getElementById("div1");
+
+
 function setup() {
   frameRate(60);
-  cnv = createCanvas(460, 400);
+  cnv = createCanvas(600, 450);
   cnv.mousePressed(setBall); // attach
 
   numBalls = 0;
 
   cb1 = createCheckbox("공 색칠", false);
-  cb1.position(10, height + 10);
+  cb1.position(10, cnv.position().y+height + 10);
   cb4 = createCheckbox("공 테두리 표시", true);
   cb4.position(cb1.x + 80, cb1.y);
 
@@ -70,6 +73,18 @@ function setup() {
 
 }
 
+function draw() {
+  background(0, 0, 0);
+  
+  divText.innerText = "# Number of Balls:" + numBalls + " 중력가속도 크기:" + vaccel ;
+  for (let i = 0; i < numBalls; i++) {
+    balls[i].collideVector();
+    balls[i].freeFallVector();
+    balls[i].displayVector();
+  }
+}
+
+
 function resetArray() {
   balls.splice(0,balls.length);
   numBalls = 0;
@@ -102,15 +117,6 @@ function PrintDV4() {
  
 }
 
-function draw() {
-  background(0, 0, 0);
-
-  for (let i = 0; i < numBalls; i++) {
-    balls[i].collideVector();
-    balls[i].freeFallVector();
-    balls[i].displayVector();
-  }
-}
 
 function setBall() {
   // Create freeFall object
